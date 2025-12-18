@@ -45,11 +45,19 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
 
+    <!-- Top Bar -->
+    <div class="bg-[#0c0c0d] text-white py-1.5 text-center shadow-sm z-10 relative">
+        <a href="https://www.youtube.com/@BrunoPadilhaOficial" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide hover:text-brand-400 transition-colors">
+            <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            @BrunoPadilhaOficial
+        </a>
+    </div>
+
     <!-- Cabeçalho -->
-    <header class="bg-brand-900 text-white py-6 shadow-lg">
+    <header class="bg-[#233328] text-white py-6 shadow-lg relative z-0">
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-2xl md:text-3xl font-bold">Planejador de Independência Financeira</h1>
-            <p class="text-brand-100 mt-2 text-sm md:text-base">Calcule seu futuro em valor real (descontando a inflação).</p>
+            <p class="text-brand-100 mt-2 text-sm md:text-base opacity-80">Calcule seu futuro com base no seu custo de vida real.</p>
         </div>
     </header>
 
@@ -74,25 +82,56 @@
                 
                 <form id="calc-form" class="space-y-6">
                     
-                    <!-- Renda Mensal (Referência) -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Sua Renda Mensal Atual</label>
-                        <div class="relative rounded-md shadow-sm">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span class="text-gray-500 sm:text-sm">R$</span>
+                    <!-- Bloco de Finanças Pessoais (Interligado) -->
+                    <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <!-- Renda Mensal -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Renda Mensal Líquida</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm">R$</span>
+                                </div>
+                                <input type="text" inputmode="numeric" id="currentIncome" oninput="maskCurrency(this)" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-white focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition font-semibold" value="5.000,00">
                             </div>
-                            <input type="number" id="currentIncome" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition" value="5000">
                         </div>
-                    </div>
 
-                    <!-- Aporte Mensal -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Quanto vai investir por mês?</label>
-                        <div class="relative rounded-md shadow-sm">
-                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span class="text-gray-500 sm:text-sm">R$</span>
+                        <!-- Custo de Vida -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 flex justify-between">
+                                <span>Custo de Vida Atual</span>
+                                <span class="text-xs text-gray-400 font-normal self-center">Gasto Mensal</span>
+                            </label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm">R$</span>
+                                </div>
+                                <input type="text" inputmode="numeric" id="costOfLivingInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-white focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-red-600" value="3.500,00">
                             </div>
-                            <input type="number" id="monthlyContribInput" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition" value="1500">
+                        </div>
+
+                        <!-- Investimento Inicial (NOVO CAMPO) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Já tenho investido</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm">R$</span>
+                                </div>
+                                <input type="text" inputmode="numeric" id="initialInvestmentInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-white focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-gray-600" value="0,00" placeholder="0,00">
+                            </div>
+                        </div>
+
+                        <!-- Aporte Mensal -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 flex justify-between">
+                                <span>Quanto vai investir?</span>
+                                <span class="text-xs text-gray-400 font-normal self-center">O que sobra</span>
+                            </label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm">R$</span>
+                                </div>
+                                <input type="text" inputmode="numeric" id="monthlyContribInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-brand-300 py-2 pl-10 pr-3 bg-brand-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-brand-700 font-bold" value="1.500,00">
+                            </div>
                         </div>
                     </div>
 
@@ -114,9 +153,9 @@
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <span class="text-gray-500 sm:text-sm">R$</span>
                             </div>
-                            <input type="number" id="targetIncomeInput" class="block w-full rounded-md border-brand-300 py-2 pl-10 pr-3 bg-green-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-brand-700 font-semibold" value="5000">
+                            <input type="text" inputmode="numeric" id="targetIncomeInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-brand-300 py-2 pl-10 pr-3 bg-green-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-brand-700 font-semibold" value="3.500,00">
                         </div>
-                        <p class="text-xs text-gray-400 mt-1">Quanto você quer sacar todo mês.</p>
+                        <p class="text-xs text-gray-400 mt-1">Geralmente igual ao seu custo de vida.</p>
                     </div>
 
                     <!-- Taxas (Grid) -->
@@ -124,12 +163,22 @@
                         <!-- Juros Anual -->
                         <div>
                             <label class="block text-xs font-medium text-gray-500 mb-1">Rentabilidade Anual</label>
-                            <input type="number" id="interestRate" step="0.1" class="block w-full rounded-md border border-gray-200 py-2 px-3 text-center bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" value="12">
+                            <div class="relative rounded-md shadow-sm">
+                                <input type="text" inputmode="decimal" id="interestRate" onkeyup="maskDecimal(this)" class="block w-full rounded-md border border-gray-200 py-2 pl-3 pr-8 text-left bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" value="12,0">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <span class="text-gray-500 sm:text-sm">%</span>
+                                </div>
+                            </div>
                         </div>
                         <!-- Inflação -->
                         <div>
                             <label class="block text-xs font-medium text-gray-500 mb-1">Inflação Estimada</label>
-                            <input type="number" id="inflationRate" step="0.1" class="block w-full rounded-md border border-gray-200 py-2 px-3 text-center bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" value="6">
+                            <div class="relative rounded-md shadow-sm">
+                                <input type="text" inputmode="decimal" id="inflationRate" onkeyup="maskDecimal(this)" class="block w-full rounded-md border border-gray-200 py-2 pl-3 pr-8 text-left bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none" value="6,0">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <span class="text-gray-500 sm:text-sm">%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -166,7 +215,7 @@
                 <!-- Comparativo / Barra -->
                 <div class="bg-brand-50 rounded-xl p-4 flex items-center justify-between border border-brand-100">
                     <div class="flex-grow mr-4">
-                        <span class="text-sm text-brand-900 font-medium" id="progressLabel">Cobertura da Renda Atual:</span>
+                        <span class="text-sm text-brand-900 font-medium" id="progressLabel">Cobertura do Custo de Vida:</span>
                         <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
                             <div id="progressBar" class="bg-brand-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                         </div>
@@ -187,18 +236,62 @@
 
     <!-- Footer -->
     <footer class="bg-gray-100 py-6 text-center text-gray-500 text-sm">
-        <p>&copy; 2025 Bruno Padilha. Apenas uma simulação!</p>
+        <p>&copy; 2026 Bruno Padilha.</p>
+        <a href="https://www.youtube.com/@BrunoPadilhaOficial" target="_blank" class="text-brand-600 hover:underline mt-2 inline-block font-medium">
+            Acesse o Canal Oficial no YouTube
+        </a>
     </footer>
 
     <!-- Script Lógico -->
     <script>
-        // Estado
-        let mode = 'time'; // 'time' ou 'target'
+        // --- MÁSCARAS DE INPUT ---
+        
+        function maskCurrency(input) {
+            let value = input.value.replace(/\D/g, ""); 
+            if (value === "") {
+                input.value = "";
+                return;
+            }
+            value = (parseInt(value) / 100).toFixed(2) + ""; 
+            value = value.replace(".", ","); 
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."); 
+            input.value = value;
+        }
+
+        function maskDecimal(input) {
+            let value = input.value;
+            value = value.replace('.', ',');
+            value = value.replace(/[^0-9,]/g, '');
+            input.value = value;
+        }
+
+        // --- FUNÇÕES AUXILIARES DE CONVERSÃO ---
+
+        function parseMoney(str) {
+            if (!str) return 0;
+            let clean = str.replace(/\./g, '').replace(',', '.');
+            return parseFloat(clean) || 0;
+        }
+
+        function formatMoneyInput(val) {
+            if (val === undefined || val === null) return "0,00";
+            return val.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        }
+
+        function parseRate(str) {
+            if (!str) return 0;
+            return parseFloat(str.replace(',', '.')) || 0;
+        }
+
+        // --- ESTADO & ELEMENTOS ---
+
+        let mode = 'time'; 
         let chartInstance = null;
 
-        // Elementos do DOM
         const inputs = {
             currentIncome: document.getElementById('currentIncome'),
+            costOfLivingInput: document.getElementById('costOfLivingInput'),
+            initialInvestmentInput: document.getElementById('initialInvestmentInput'), // Novo
             monthlyContribInput: document.getElementById('monthlyContribInput'),
             yearsInput: document.getElementById('yearsInput'),
             targetIncomeInput: document.getElementById('targetIncomeInput'),
@@ -228,26 +321,58 @@
             progressPercent: document.getElementById('progressPercent')
         };
 
-        // Formatação
         const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }).format(value);
         
-        // Troca de Modo
+        // --- LÓGICA DE INPUTS INTERLIGADOS (RENDA = CUSTO + APORTE) ---
+
+        function updateFromIncome() {
+            // Renda Mudou -> Recalcula Aporte (Renda - Custo)
+            const income = parseMoney(inputs.currentIncome.value);
+            const cost = parseMoney(inputs.costOfLivingInput.value);
+            
+            let result = income - cost;
+            inputs.monthlyContribInput.value = formatMoneyInput(result);
+        }
+
+        function updateFromCost() {
+            // Custo Mudou -> Recalcula Aporte (Renda - Custo)
+            const income = parseMoney(inputs.currentIncome.value);
+            const cost = parseMoney(inputs.costOfLivingInput.value);
+            
+            let result = income - cost;
+            inputs.monthlyContribInput.value = formatMoneyInput(result);
+        }
+
+        function updateFromContrib() {
+            // Aporte Mudou -> Recalcula Custo (Renda - Aporte)
+            const income = parseMoney(inputs.currentIncome.value);
+            const contrib = parseMoney(inputs.monthlyContribInput.value);
+            
+            let result = income - contrib;
+            inputs.costOfLivingInput.value = formatMoneyInput(result);
+        }
+
+        // Listeners para sincronia
+        inputs.currentIncome.addEventListener('input', updateFromIncome);
+        inputs.costOfLivingInput.addEventListener('input', updateFromCost);
+        inputs.monthlyContribInput.addEventListener('input', updateFromContrib);
+
+        // --- FUNÇÕES PRINCIPAIS ---
+
         function switchMode(newMode) {
             mode = newMode;
             
-            // Atualizar UI das Abas
             if(mode === 'time') {
                 tabs.time.className = "w-1/2 py-2 text-sm transition-colors tab-active";
                 tabs.target.className = "w-1/2 py-2 text-sm transition-colors tab-inactive";
                 containers.time.classList.remove('hidden');
                 containers.target.classList.add('hidden');
 
-                // Labels de Resultado
                 displays.label1.innerText = "Patrimônio Acumulado";
                 displays.sub1.innerText = "Valor real ao final do período";
                 displays.label2.innerText = "Renda Mensal Vitalícia";
                 displays.sub2.innerText = "Sacando apenas o juro real";
-                displays.progressLabel.innerText = "Cobertura da Renda Atual:";
+                displays.progressLabel.innerText = "Cobertura do Custo de Vida:";
 
             } else {
                 tabs.target.className = "w-1/2 py-2 text-sm transition-colors tab-active";
@@ -255,7 +380,9 @@
                 containers.target.classList.remove('hidden');
                 containers.time.classList.add('hidden');
 
-                // Labels de Resultado
+                // Sincronizar (Copiar valor do custo de vida para meta)
+                inputs.targetIncomeInput.value = inputs.costOfLivingInput.value;
+
                 displays.label1.innerText = "Tempo Necessário";
                 displays.sub1.innerText = "Para atingir sua meta";
                 displays.label2.innerText = "Patrimônio Necessário";
@@ -265,98 +392,106 @@
             calculate();
         }
 
-        // Event Listeners
-        // Agora ouvimos apenas o 'submit' do formulário (botão ou Enter)
         document.getElementById('calc-form').addEventListener('submit', function(e) {
-            e.preventDefault(); // Impede o recarregamento da página
+            e.preventDefault(); 
             calculate();
         });
 
-        // Função Principal de Cálculo
         function calculate() {
-            // Inputs comuns
-            const P = parseFloat(inputs.monthlyContribInput.value) || 0;
-            const i_nominal_anual = (parseFloat(inputs.interestRate.value) || 0) / 100;
-            const inflacao_anual = (parseFloat(inputs.inflationRate.value) || 0) / 100;
-            const rendaAtual = parseFloat(inputs.currentIncome.value) || 1;
-
+            // Parsing correto dos inputs formatados
+            const P = parseMoney(inputs.monthlyContribInput.value);
+            const initialInv = parseMoney(inputs.initialInvestmentInput.value);
+            const costOfLiving = parseMoney(inputs.costOfLivingInput.value) || 1;
+            
+            const i_nominal_anual = parseRate(inputs.interestRate.value) / 100;
+            const inflacao_anual = parseRate(inputs.inflationRate.value) / 100;
+            
             // Taxa Real
             let i_real_anual = ((1 + i_nominal_anual) / (1 + inflacao_anual)) - 1;
-            if (i_real_anual <= 0) i_real_anual = 0.0001; // Evitar divisão por zero ou loop infinito
+            if (i_real_anual <= 0) i_real_anual = 0.0001;
             let i_real_mensal = Math.pow(1 + i_real_anual, 1/12) - 1;
 
             let years = 0;
-            let targetSaldo = 0;
 
             if (mode === 'time') {
-                // --- MODO: TEMPO FIXO ---
                 years = parseInt(inputs.yearsInput.value) || 0;
                 
-                // FV = P * (((1+i)^n - 1) / i)
                 let meses = years * 12;
-                let saldo = P * ( (Math.pow(1 + i_real_mensal, meses) - 1) / i_real_mensal );
                 
+                // FV = PV * (1+i)^n + PMT * [((1+i)^n - 1) / i]
+                let fv_initial = initialInv * Math.pow(1 + i_real_mensal, meses);
+                let fv_contrib = P * ( (Math.pow(1 + i_real_mensal, meses) - 1) / i_real_mensal );
+                
+                let saldo = fv_initial + fv_contrib;
+                if (saldo < 0) saldo = 0;
+
                 let rendaGerada = saldo * i_real_mensal;
 
-                // Displays
                 displays.val1.innerText = formatCurrency(saldo);
                 displays.val2.innerText = formatCurrency(rendaGerada);
 
-                // Barra: Renda Gerada vs Renda Atual
-                let percent = (rendaGerada / rendaAtual) * 100;
+                let percent = (rendaGerada / costOfLiving) * 100;
+                displays.progressLabel.innerText = "Cobertura do Custo de Vida:";
                 updateProgressBar(percent);
 
-                updateChart(years, P, i_real_mensal, null);
+                updateChart(years, P, initialInv, i_real_mensal, null);
 
             } else {
-                // --- MODO: META DE RENDA ---
-                let targetIncome = parseFloat(inputs.targetIncomeInput.value) || 0;
+                let targetIncome = parseMoney(inputs.targetIncomeInput.value);
                 
                 // Saldo Necessário = Renda / i
                 let saldoNecessario = targetIncome / i_real_mensal;
                 
-                // n = ln( (FV * i / P) + 1 ) / ln(1+i)
-                // FV = saldoNecessario
-                // (saldoNecessario * i) / P + 1 = (RendaTarget / P) + 1
+                // Cálculo de tempo com PV (Investimento Inicial)
+                // FV = PV * (1+i)^n + (PMT/i) * [(1+i)^n - 1]
+                // FV + PMT/i = (1+i)^n * (PV + PMT/i)
+                // (FV + PMT/i) / (PV + PMT/i) = (1+i)^n
+                // n = ln(...) / ln(1+i)
                 
-                if (P > 0 && targetIncome > 0) {
-                    let num = (targetIncome / P) + 1; // Simplificação matemática: (S*i)/P é igual a RendaTarget/P
-                    let mesesNecessarios = Math.log(num) / Math.log(1 + i_real_mensal);
-                    years = mesesNecessarios / 12;
+                // Numerador e Denominador
+                let pmt_over_i = P / i_real_mensal;
+                let numerator = saldoNecessario + pmt_over_i;
+                let denominator = initialInv + pmt_over_i;
+
+                if (denominator > 0 && numerator > 0) {
+                    let frac = numerator / denominator;
+                    if (frac > 0) {
+                        let mesesNecessarios = Math.log(frac) / Math.log(1 + i_real_mensal);
+                        years = mesesNecessarios / 12;
+                    } else {
+                        years = 0; // Já passou ou impossível
+                    }
                 } else {
                     years = 0;
                 }
+                
+                // Se já tem dinheiro suficiente
+                if (initialInv * i_real_mensal >= targetIncome) {
+                    years = 0;
+                }
 
-                // Limite visual para evitar gráfico infinito
                 if (!isFinite(years) || years > 100) years = 100; 
+                if (years < 0) years = 0;
 
-                // Displays
                 let anosInt = Math.floor(years);
                 let mesesInt = Math.round((years - anosInt) * 12);
                 displays.val1.innerText = `${anosInt} anos e ${mesesInt} meses`;
                 
                 displays.val2.innerText = formatCurrency(saldoNecessario);
 
-                // Barra: Aporte atual vs Aporte necessário? Não, melhor fazer progresso temporal reverso é confuso.
-                // Vamos mostrar % do patrimônio necessario atingido em X anos? Não temos anos fixos.
-                // Vamos simplificar: A barra mostra 100% pois a meta é chegar lá. 
-                // Ou melhor: Vamos deixar a barra fixa em 100% verde dizendo "Meta Definida".
-                // Alternativa melhor: Mostrar quanto a Renda Desejada representa da Renda Atual.
-                
-                let percent = (targetIncome / rendaAtual) * 100;
-                // Mas a label diz "Progresso". Vamos mudar a lógica visual da barra para este modo.
-                // Na verdade, no modo Target, a barra é menos útil sem saber o patrimônio atual (que assumimos zero).
-                // Vamos usar a barra para mostrar: Renda Desejada vs Renda Atual.
-                displays.progressLabel.innerText = "Sua meta representa da renda atual:";
+                let percent = (targetIncome / costOfLiving) * 100;
+                displays.progressLabel.innerText = "Meta vs Custo de Vida Atual:";
                 updateProgressBar(percent);
 
-                updateChart(years, P, i_real_mensal, saldoNecessario);
+                updateChart(years, P, initialInv, i_real_mensal, saldoNecessario);
             }
         }
 
         function updateProgressBar(percent) {
             let p = percent;
             if (p > 100) p = 100;
+            if (p < 0) p = 0;
+
             displays.progressBar.style.width = `${p}%`;
             displays.progressPercent.innerText = `${percent.toFixed(1)}%`;
 
@@ -369,27 +504,30 @@
             }
         }
 
-        // Gráfico Unificado
-        function updateChart(yearsFloat, P, i_monthly, targetLineValue) {
+        function updateChart(yearsFloat, P, initialInv, i_monthly, targetLineValue) {
             const ctx = document.getElementById('growthChart').getContext('2d');
             
-            // Gerar dados
             const labels = [];
             const dataPatrimonio = [];
             const dataInvestido = [];
             
-            // Definir o teto de anos para o gráfico
             let maxYears = Math.ceil(yearsFloat);
-            if (maxYears < 5) maxYears = 5; // Mínimo visual
-            if (maxYears > 100) maxYears = 100; // Máximo visual
+            if (maxYears < 5) maxYears = 5; 
+            if (maxYears > 100) maxYears = 100;
 
-            let saldo = 0;
-            let totalInvestido = 0;
+            let saldo = initialInv;
+            let totalInvestido = initialInv;
             let meses = maxYears * 12;
+
+            // Ponto inicial (Ano 0)
+            labels.push('Hoje');
+            dataPatrimonio.push(saldo);
+            dataInvestido.push(totalInvestido);
 
             for (let m = 1; m <= meses; m++) {
                 saldo = saldo * (1 + i_monthly) + P;
                 totalInvestido += P;
+                if (saldo < 0) saldo = 0; 
 
                 if (m % 12 === 0) {
                     labels.push(`Ano ${m/12}`);
@@ -398,11 +536,6 @@
                 }
             }
 
-            // Preparar anotação (linha de meta) se estiver no modo Target
-            // Chart.js annotations plugin é externo, vamos improvisar com um dataset extra se necessário
-            // Ou apenas plotar o crescimento até a meta.
-            
-            // Recriar Gráfico
             if (chartInstance) chartInstance.destroy();
 
             const datasets = [
@@ -428,14 +561,12 @@
                 }
             ];
 
-            // Adicionar linha de meta se existir e se estiver dentro do range
             if (targetLineValue && mode === 'target') {
-                // Criar uma linha reta constante
                 let targetData = new Array(dataPatrimonio.length).fill(targetLineValue);
                 datasets.push({
                     label: 'Meta Necessária',
                     data: targetData,
-                    borderColor: '#3b82f6', // blue-500
+                    borderColor: '#3b82f6', 
                     borderWidth: 2,
                     pointRadius: 0,
                     fill: false
@@ -481,8 +612,16 @@
             });
         }
 
-        // Inicializar
+        // Inicializa já formatado
         calculate();
+
+        // UX Melhorada: Selecionar conteúdo ao clicar
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                // Timeout para garantir que o clique não desfaça a seleção
+                setTimeout(() => this.select(), 50);
+            });
+        });
 
     </script>
 </body>
