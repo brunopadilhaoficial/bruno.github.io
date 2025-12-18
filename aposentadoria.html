@@ -74,7 +74,7 @@
                         Acumular
                     </button>
                     <button id="tabTarget" onclick="switchMode('target')" class="flex-1 py-3 transition-colors tab-inactive text-center border-l border-r border-gray-300">
-                        Meta Tempo
+                        Tempo
                     </button>
                     <button id="tabWithdraw" onclick="switchMode('withdraw')" class="flex-1 py-3 transition-colors tab-inactive text-center">
                         Retiradas
@@ -88,14 +88,25 @@
                     <!-- Bloco de Finanças Pessoais (Interligado) -->
                     <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-100 relative">
                         
-                        <!-- INVESTIMENTO INICIAL -->
-                        <div>
-                            <label id="initialInvestLabel" class="block text-sm font-medium text-gray-700 mb-1">Já tenho investido</label>
+                        <!-- INVESTIMENTO INICIAL (Acumular/Meta) -->
+                        <div id="initialInvestmentBlock">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Já tenho investido</label>
                             <div class="relative rounded-md shadow-sm">
                                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <span class="text-gray-500 sm:text-sm">R$</span>
                                     </div>
                                 <input type="text" inputmode="numeric" id="initialInvestmentInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-white focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-gray-600 font-bold" value="0,00" placeholder="0,00">
+                            </div>
+                        </div>
+
+                        <!-- INVESTIMENTO INICIAL (Retiradas - Independente) -->
+                        <div id="withdrawInitialBlock" class="hidden">
+                            <label class="block text-sm font-medium text-brand-700 font-bold mb-1">Valor Total Investido</label>
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm">R$</span>
+                                    </div>
+                                <input type="text" inputmode="numeric" id="withdrawInitialInput" oninput="maskCurrency(this)" class="block w-full rounded-md border-gray-300 py-2 pl-10 pr-3 bg-white focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition text-gray-600 font-bold" value="1.000.000,00" placeholder="0,00">
                             </div>
                         </div>
 
@@ -193,10 +204,10 @@
                                     <span class="text-gray-500 sm:text-sm">%</span>
                                 </div>
                             </div>
-                            <!-- INDICADOR DE SELIC (Novo) -->
+                            <!-- INDICADOR DE SELIC -->
                             <div class="text-[10px] text-gray-400 mt-1 flex justify-between items-center px-1">
                                 <span class="flex items-center gap-1">
-                                    Selic: 
+                                    SELIC: 
                                     <button type="button" id="selicButton" class="text-brand-600 hover:text-brand-700 hover:underline font-bold cursor-pointer bg-brand-50 px-1 rounded transition-colors" title="Clique para usar este valor">...</button>
                                 </span>
                                 <a href="https://www.bcb.gov.br/controleinflacao/taxaselic" target="_blank" class="flex items-center gap-1 text-gray-400 hover:text-brand-600 transition-colors" title="Ver fonte oficial no BCB">
@@ -425,8 +436,9 @@
             currentIncome: document.getElementById('currentIncome'),
             costOfLivingInput: document.getElementById('costOfLivingInput'),
             initialInvestmentInput: document.getElementById('initialInvestmentInput'), 
+            withdrawInitialInput: document.getElementById('withdrawInitialInput'), // Novo campo independente
             monthlyContribInput: document.getElementById('monthlyContribInput'),
-            monthlyWithdrawInput: document.getElementById('monthlyWithdrawInput'), // Novo
+            monthlyWithdrawInput: document.getElementById('monthlyWithdrawInput'), 
             yearsInput: document.getElementById('yearsInput'),
             targetIncomeInput: document.getElementById('targetIncomeInput'),
             interestRate: document.getElementById('interestRate'),
@@ -446,9 +458,7 @@
             withdraw: document.getElementById('tabWithdraw')
         }
 
-        const labels = {
-            initialInvest: document.getElementById('initialInvestLabel')
-        }
+        // labels.initialInvest removido pois agora trocamos o bloco inteiro
 
         const displays = {
             label1: document.getElementById('resultLabel1'),
@@ -511,13 +521,17 @@
             if (mode === 'withdraw') {
                 containers.accumulation.classList.add('hidden');
                 containers.withdrawal.classList.remove('hidden');
-                labels.initialInvest.innerText = "Valor Total Investido";
-                labels.initialInvest.classList.add('text-brand-700', 'font-bold');
+                
+                // Mostrar campo independente de investimento para retirada
+                document.getElementById('initialInvestmentBlock').classList.add('hidden');
+                document.getElementById('withdrawInitialBlock').classList.remove('hidden');
             } else {
                 containers.accumulation.classList.remove('hidden');
                 containers.withdrawal.classList.add('hidden');
-                labels.initialInvest.innerText = "Já tenho investido";
-                labels.initialInvest.classList.remove('text-brand-700', 'font-bold');
+                
+                // Mostrar campo padrão de investimento inicial
+                document.getElementById('initialInvestmentBlock').classList.remove('hidden');
+                document.getElementById('withdrawInitialBlock').classList.add('hidden');
             }
 
             // Visibilidade de Tempo vs Meta
@@ -562,7 +576,14 @@
         });
 
         function calculate() {
-            const initialInv = parseMoney(inputs.initialInvestmentInput.value);
+            // Seleciona o investimento inicial correto dependendo da aba
+            let initialInv = 0;
+            if (mode === 'withdraw') {
+                initialInv = parseMoney(inputs.withdrawInitialInput.value);
+            } else {
+                initialInv = parseMoney(inputs.initialInvestmentInput.value);
+            }
+
             const costOfLiving = parseMoney(inputs.costOfLivingInput.value) || 1;
             
             const i_nominal_anual = parseRate(inputs.interestRate.value) / 100;
